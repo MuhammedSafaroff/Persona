@@ -3,27 +3,104 @@ import 'package:flutter/material.dart';
 import 'package:survey_kit/survey_kit.dart';
 
 class Tests extends StatelessWidget {
-  Tests({Key? key}) : super(key: key);
+  const Tests({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: FutureBuilder<Task>(
+    return Scaffold(
+      body: Container(
+        color: Colors.white,
+        child: Align(
+          alignment: Alignment.center,
+          child: FutureBuilder<Task>(
             future: getSampleTask(),
             builder: (context, snapshot) {
+              //async(snapshot)
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData &&
                   snapshot.data != null) {
                 final task = snapshot.data!;
                 return SurveyKit(
+                  //Survey Widget
                   onResult: (SurveyResult result) {
-                    print(result.finishReason);
+                    //print(result.finishReason);   //TODO SAVE DATA
                   },
                   task: task,
+                  themeData: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.fromSwatch(
+                      primarySwatch: Colors.cyan,
+                    ).copyWith(
+                      onPrimary: Colors.white,
+                    ),
+                    primaryColor: Colors.cyan,
+                    backgroundColor: Colors.white,
+                    appBarTheme: const AppBarTheme(
+                      color: Colors.white,
+                      iconTheme: IconThemeData(
+                        color: Colors.cyan,
+                      ),
+                    ),
+                    iconTheme: const IconThemeData(
+                      color: Colors.cyan,
+                    ),
+                    outlinedButtonTheme: OutlinedButtonThemeData(
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(
+                          const Size(150.0, 60.0),
+                        ),
+                        side: MaterialStateProperty.resolveWith(
+                              (Set<MaterialState> state) {
+                            if (state.contains(MaterialState.disabled)) {
+                              return const BorderSide(
+                                color: Colors.grey,
+                              );
+                            }
+                            return const BorderSide(
+                              color: Colors.cyan,
+                            );
+                          },
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        textStyle: MaterialStateProperty.resolveWith(
+                              (Set<MaterialState> state) {
+                            if (state.contains(MaterialState.disabled)) {
+                              return Theme.of(context)
+                                  .textTheme
+                                  .button
+                                  ?.copyWith(
+                                color: Colors.grey,
+                              );
+                            }
+                            return Theme.of(context).textTheme.button?.copyWith(
+                              color: Colors.cyan,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all(
+                          Theme.of(context).textTheme.button?.copyWith(
+                            color: Colors.cyan,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               }
-              return CircularProgressIndicator.adaptive();
-            }));
+              Navigator.of(context).maybePop();
+              return const CircularProgressIndicator.adaptive();
+            },
+          ),
+        ),
+      ),
+    );
   }
 
   Future<Task> getSampleTask() {
@@ -37,7 +114,7 @@ class Tests extends StatelessWidget {
         ),
         QuestionStep(
           title: 'How old are you?',
-          answerFormat: IntegerAnswerFormat(
+          answerFormat: const IntegerAnswerFormat(
             defaultValue: 25,
             hint: 'Please enter your age',
           ),
@@ -46,7 +123,7 @@ class Tests extends StatelessWidget {
         QuestionStep(
           title: 'Medication?',
           text: 'Are you using any medication',
-          answerFormat: BooleanAnswerFormat(
+          answerFormat: const BooleanAnswerFormat(
             positiveAnswer: 'Yes',
             negativeAnswer: 'No',
             result: BooleanResult.POSITIVE,
@@ -54,16 +131,15 @@ class Tests extends StatelessWidget {
         ),
         QuestionStep(
           title: 'Tell us about you',
-          text:
-              'Tell us about yourself and why you want to improve your health.',
-          answerFormat: TextAnswerFormat(
+          text: 'Tell us about yourself.',
+          answerFormat: const TextAnswerFormat(
             maxLines: 5,
-            validationRegEx: "^(?!\s*\$).+",
+            validationRegEx: "^(?!s*\$).+",
           ),
         ),
         QuestionStep(
-          title: 'Select your body type',
-          answerFormat: ScaleAnswerFormat(
+          title: 'Select your current happiness level',
+          answerFormat: const ScaleAnswerFormat(
             step: 1,
             minimumValue: 1,
             maximumValue: 5,
@@ -73,21 +149,22 @@ class Tests extends StatelessWidget {
           ),
         ),
         QuestionStep(
-          title: 'Known allergies',
-          text: 'Do you have any allergies that we should be aware of?',
-          answerFormat: MultipleChoiceAnswerFormat(
+          title: 'Known issues',
+          text:
+          'Do you have any mental health issues that we should be aware of?',
+          answerFormat: const MultipleChoiceAnswerFormat(
             textChoices: [
-              TextChoice(text: 'Penicillin', value: 'Penicillin'),
-              TextChoice(text: 'Latex', value: 'Latex'),
-              TextChoice(text: 'Pet', value: 'Pet'),
-              TextChoice(text: 'Pollen', value: 'Pollen'),
+              TextChoice(text: 'Anxiety', value: 'Anxiety'),
+              TextChoice(text: 'Depression', value: 'Depression'),
+              TextChoice(text: 'Schizophrenia', value: 'Schizophrenia'),
+              TextChoice(text: 'Addiction', value: 'Addiction'),
             ],
           ),
         ),
         QuestionStep(
           title: 'Done?',
           text: 'We are done, do you mind to tell us more about yourself?',
-          answerFormat: SingleChoiceAnswerFormat(
+          answerFormat: const SingleChoiceAnswerFormat(
             textChoices: [
               TextChoice(text: 'Yes', value: 'Yes'),
               TextChoice(text: 'No', value: 'No'),
@@ -96,8 +173,8 @@ class Tests extends StatelessWidget {
           ),
         ),
         QuestionStep(
-          title: 'When did you wake up?',
-          answerFormat: TimeAnswerFormat(
+          title: 'When did you feel depressed?',
+          answerFormat: const TimeAnswerFormat(
             defaultValue: TimeOfDay(
               hour: 12,
               minute: 0,
@@ -114,7 +191,7 @@ class Tests extends StatelessWidget {
         ),
         CompletionStep(
           stepIdentifier: StepIdentifier(id: '321'),
-          text: 'Thanks for taking the survey, we will contact you soon!',
+          text: 'Thanks for taking the survey!',
           title: 'Done!',
           buttonText: 'Submit survey',
         ),
