@@ -8,6 +8,9 @@ class TraitWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.lightGreen,width: 3)
+        ),
         padding: const EdgeInsets.all(12),
         child: Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.start, children: const [
@@ -28,7 +31,7 @@ class TraitWidget extends StatelessWidget {
             ),
             RadarChart(
               maxValue: 10,
-              values: const [1, 2, 3, 4, 6],
+              values: const [6,4,6,8,2],
               labels: const [
                 "Openness",
                 "Conscientiousness",
@@ -36,6 +39,7 @@ class TraitWidget extends StatelessWidget {
                 "Agreeableness",
                 "Neuroticism"
               ],
+              textScaleFactor: 0.06,
               fillColor: Colors.lightGreen,
               maxHeight: 150,
             )
