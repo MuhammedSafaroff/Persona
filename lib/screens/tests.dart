@@ -14,7 +14,7 @@ class Tests extends StatelessWidget {
           alignment: Alignment.center,
           child: FutureBuilder<Task>(
             future: getSampleTask(),
-            builder: (context, snapshot) {
+            builder: (context, snapshot) {    //async(snapshot)
               //async(snapshot)
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData &&
@@ -132,14 +132,14 @@ class Tests extends StatelessWidget {
         QuestionStep(
           title: 'Tell us about you',
           text:
-              'Tell us about yourself and why you want to improve your health.',
+              'Tell us about yourself and why you want to know your personality.',
           answerFormat: TextAnswerFormat(
             maxLines: 5,
             validationRegEx: "^(?!\s*\$).+",
           ),
         ),
         QuestionStep(
-          title: 'Select your body type',
+          title: 'Select your average happiness level in the last month.',
           answerFormat: ScaleAnswerFormat(
             step: 1,
             minimumValue: 1,
@@ -150,14 +150,14 @@ class Tests extends StatelessWidget {
           ),
         ),
         QuestionStep(
-          title: 'Known allergies',
-          text: 'Do you have any allergies that we should be aware of?',
+          title: 'Known mental disorders',
+          text: 'Do you have any mental disorders that we should be aware of?',
           answerFormat: MultipleChoiceAnswerFormat(
             textChoices: [
-              TextChoice(text: 'Penicillin', value: 'Penicillin'),
-              TextChoice(text: 'Latex', value: 'Latex'),
-              TextChoice(text: 'Pet', value: 'Pet'),
-              TextChoice(text: 'Pollen', value: 'Pollen'),
+              TextChoice(text: 'Anxiety', value: 'Anxiety'),
+              TextChoice(text: 'Depression', value: 'Depression'),
+              TextChoice(text: 'Autism', value: 'Autism'),
+              TextChoice(text: 'Schizophrenia', value: 'Schizophrenia'),
             ],
           ),
         ),
@@ -173,7 +173,7 @@ class Tests extends StatelessWidget {
           ),
         ),
         QuestionStep(
-          title: 'When did you wake up?',
+          title: 'When did you feel sad the last time?',
           answerFormat: TimeAnswerFormat(
             defaultValue: TimeOfDay(
               hour: 12,
@@ -191,7 +191,7 @@ class Tests extends StatelessWidget {
         ),
         CompletionStep(
           stepIdentifier: StepIdentifier(id: '321'),
-          text: 'Thanks for taking the survey, we will contact you soon!',
+          text: 'Thanks for taking the survey!',
           title: 'Done!',
           buttonText: 'Submit survey',
         ),
