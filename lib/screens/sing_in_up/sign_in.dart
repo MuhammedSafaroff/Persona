@@ -34,11 +34,11 @@ class SignIn extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                height: size!.height * 0.35,
+                height: size!.height * 0.3,
                 child: AppBar(
                   flexibleSpace: Center(
                     child: Text(
-                      "Vstore",
+                      "Persona",
                       style: TextStyle(
                           color: Colors.green,
                           fontSize: 32,
@@ -63,7 +63,7 @@ class SignIn extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(height: size!.height * 0.65, child: MyTabView()),
+              Container(height: size!.height * 0.7, child: MyTabView()),
             ],
           ),
         ),

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:survey_kit/survey_kit.dart';
 
 class Tests extends StatelessWidget {
@@ -24,8 +27,11 @@ class Tests extends StatelessWidget {
                 return SurveyKit(
                   //Survey Widget
                   onResult: (SurveyResult result) {
-                    //print(result.finishReason); tODO SAVE DATA
+                    for (var i = 0; i < task.steps.length; i++) {
+                      print(task.steps[i].buttonText);
+                    }
                   },
+
                   task: task,
                   themeData: Theme.of(context).copyWith(
                     colorScheme: ColorScheme.fromSwatch(

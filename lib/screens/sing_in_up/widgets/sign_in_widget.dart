@@ -15,6 +15,7 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   TextEditingController passController = TextEditingController();
   bool isPass = true;
+  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
@@ -31,6 +32,15 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Padding(
+        padding:
+            const EdgeInsets.only(left: 24, right: 24, top: 70, bottom: 40),
+        child: Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 70, bottom: 40),
       child: Form(
@@ -72,12 +82,18 @@ class _SignInWidgetState extends State<SignInWidget> {
             ),
             Spacer(),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  MyFireBaseAuth().signInEmailandPassword(
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await MyFireBaseAuth().signInEmailandPassword(
                       emailController.text.trim(),
                       passController.text,
                       context);
+                  setState(() {
+                    isLoading = false;
+                  });
                 }
               },
               style: ElevatedButton.styleFrom(

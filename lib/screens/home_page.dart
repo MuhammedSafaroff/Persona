@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persona_application/screens/settings.dart';
+import 'package:persona_application/screens/sing_in_up/sign_in.dart';
 import 'package:persona_application/screens/tests.dart';
+import 'package:persona_application/utils/my_shared_preferences.dart';
 
 import 'dashboard.dart';
 
@@ -25,6 +27,20 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Persona'),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                await MySharedPreferences().removeSharedToken();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignIn(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.logout),
+            ),
+          ],
         ),
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
