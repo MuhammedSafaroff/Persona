@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'screens/home_page.dart';
+import 'package:persona_application/screens/sing_in_up/sign_in.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: MyHomePage(),
+      home: SignIn(),
     );
   }
 }

@@ -14,7 +14,8 @@ class Tests extends StatelessWidget {
           alignment: Alignment.center,
           child: FutureBuilder<Task>(
             future: getSampleTask(),
-            builder: (context, snapshot) {    //async(snapshot)
+            builder: (context, snapshot) {
+              //async(snapshot)
               //async(snapshot)
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData &&
@@ -23,7 +24,7 @@ class Tests extends StatelessWidget {
                 return SurveyKit(
                   //Survey Widget
                   onResult: (SurveyResult result) {
-                    //print(result.finishReason);   //TODO SAVE DATA
+                    //print(result.finishReason); tODO SAVE DATA
                   },
                   task: task,
                   themeData: Theme.of(context).copyWith(

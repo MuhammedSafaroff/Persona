@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:persona_application/dialogs/dialog_platform.dart';
 import 'package:persona_application/screens/home_page.dart';
+import 'package:persona_application/utils/my_shared_preferences.dart';
 
 class MyFireBaseAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,23 +27,7 @@ class MyFireBaseAuth {
       });
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => MyHomePage()));
-    } on FirebaseAuthException catch (error) {}
-  }
-
-  Future<void> signInEmailandPassword(
-      String email, String password, BuildContext context) async {
-    BuildContext myContext =
-        ProgressAlertDialog(context).showProgressAlertDialog();
-    try {
-      var user = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      MySharedPreferences().addSharedToken(user.user!.uid);
-      Navigator.of(myContext, rootNavigator: true).pop();
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => App()),
-          (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (error) {
-      Navigator.of(context, rootNavigator: false).pop();
       DialogPlatformCtrl(
         title: 'Error',
         myContent: Text(error.message!),
@@ -54,17 +40,25 @@ class MyFireBaseAuth {
     }
   }
 
-  Future<String> myProfileUpdate(ProfileModel data) async {
-    await _firestore.collection('Person').doc(data.token).update({
-      "fullName": data.fullName,
-      "phoneNumber": data.phoneNumber,
-      "gender": data.gender,
-      "photeURL": data.photeUrl
-    }).then((result) {
-      return "new USer true";
-    }).catchError((onError) {
-      return "onError";
-    });
-    return "";
+  Future<void> signInEmailandPassword(
+      String email, String password, BuildContext context) async {
+    try {
+      var user = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      MySharedPreferences().addSharedToken(user.user!.uid);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+          (Route<dynamic> route) => false);
+    } on FirebaseAuthException catch (error) {
+      DialogPlatformCtrl(
+        title: 'Error',
+        myContent: Text(error.message!),
+        context: context,
+        yesButton: 'OK',
+        yesButtonFun: () {
+          Navigator.of(context).pop();
+        },
+      ).platformCtrlDialog();
+    }
   }
 }
