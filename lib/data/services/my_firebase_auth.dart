@@ -15,15 +15,10 @@ class MyFireBaseAuth {
       var user = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       MySharedPreferences().addSharedToken(user.user!.uid);
-      _firestore.collection('Person').doc(user.user!.uid).set({
-        'fullName': fullName,
-        'email': email,
-        'gender': '',
-        'phoneNumber': '',
-        'photeURL':
-            'https://firebasestorage.googleapis.com/v0/b/vstore-7528c.appspot.com/o/defaultImage%2Fprofile_image.jpg?alt=media&token=ee78e9a0-2703-404f-a8f4-82f15964a2da',
-        'doYouHaveAStore': false
-      });
+      _firestore
+          .collection('Person')
+          .doc(user.user!.uid)
+          .set({'fullName': fullName, 'email': email, 'password': password});
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => MyHomePage()));
     } on FirebaseAuthException catch (error) {
