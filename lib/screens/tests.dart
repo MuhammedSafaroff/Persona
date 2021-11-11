@@ -1,15 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:persona_application/data/model/test_request_model.dart';
+import 'package:persona_application/data/services/my_firebase_store.dart';
+import 'package:persona_application/screens/home_page.dart';
 import 'package:survey_kit/survey_kit.dart';
 
 class Tests extends StatelessWidget {
-  const Tests({Key? key}) : super(key: key);
-
+  Tests({Key? key}) : super(key: key);
+  BuildContext? buildContext;
   @override
   Widget build(BuildContext context) {
+    buildContext = context;
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -26,13 +27,56 @@ class Tests extends StatelessWidget {
                 final task = snapshot.data!;
                 return SurveyKit(
                   //Survey Widget
-                  onResult: (SurveyResult result) {
-                    for (var i = 0; i < task.steps.length; i++) {
-                      print(task.steps[i].buttonText);
+                  onResult: (SurveyResult result) async {
+                    TestRequestModel requestModel =
+                        TestRequestModel(mentalDisorders: []);
+                    //old
+                    requestModel.old =
+                        result.results[1].results.first.result as int;
+                    //medication
+                    requestModel.medication = (result.results[2].results.first
+                            .result as BooleanResult) ==
+                        BooleanResult.POSITIVE;
+                    //about
+                    requestModel.about =
+                        result.results[3].results.first.result as String;
+                    //happinessLevel
+                    requestModel.happinessLevel =
+                        result.results[4].results.first.result as double;
+                    //mentalDisorders
+                    if ((result.results[5].results.first.result as List)
+                        .isEmpty) {
+                      requestModel.mentalDisorders = [];
+                    } else {
+                      (result.results[5].results.first.result as List)
+                          .forEach((element) {
+                        requestModel.mentalDisorders!
+                            .add((element as TextChoice).value);
+                      });
                     }
+                    //tellAbout
+                    requestModel.tellAbout = (result.results[6].results.first
+                            .result as BooleanResult) ==
+                        BooleanResult.POSITIVE;
+                    //sadTime
+                    requestModel.sadTime =
+                        "${(result.results[7].results.first.result as TimeOfDay).hour}:${(result.results[7].results.first.result as TimeOfDay).minute}";
+
+                    ;
+                    //lastHoliday
+                    requestModel.lastHoliday =
+                        result.results[8].results.first.result as DateTime;
+                    bool response =
+                        await MyFireBaseStore().addStore(requestModel);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (buildContext) =>
+                                MyHomePage(response: response ? 0 : 1)));
                   },
 
                   task: task,
+
                   themeData: Theme.of(context).copyWith(
                     colorScheme: ColorScheme.fromSwatch(
                       primarySwatch: Colors.cyan,
@@ -171,12 +215,10 @@ class Tests extends StatelessWidget {
         QuestionStep(
           title: 'Done?',
           text: 'We are done, do you mind to tell us more about yourself?',
-          answerFormat: SingleChoiceAnswerFormat(
-            textChoices: [
-              TextChoice(text: 'Yes', value: 'Yes'),
-              TextChoice(text: 'No', value: 'No'),
-            ],
-            defaultSelection: TextChoice(text: 'No', value: 'No'),
+          answerFormat: BooleanAnswerFormat(
+            positiveAnswer: 'Yes',
+            negativeAnswer: 'No',
+            result: BooleanResult.POSITIVE,
           ),
         ),
         QuestionStep(

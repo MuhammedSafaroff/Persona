@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persona_application/dialogs/dialog_platform.dart';
 import 'package:persona_application/screens/home_page.dart';
 import 'package:persona_application/utils/my_shared_preferences.dart';
 
@@ -28,15 +27,20 @@ class MyFireBaseAuth {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => MyHomePage()));
     } on FirebaseAuthException catch (error) {
-      DialogPlatformCtrl(
-        title: 'Error',
-        myContent: Text(error.message!),
+      showDialog(
         context: context,
-        yesButton: 'OK',
-        yesButtonFun: () {
-          Navigator.of(context).pop();
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text(error.message!),
+            actions: <Widget>[
+              TextButton(
+                  child: Text('OK'),
+                  onPressed: () => Navigator.of(context).pop()),
+            ],
+          );
         },
-      ).platformCtrlDialog();
+      );
     }
   }
 
@@ -50,15 +54,20 @@ class MyFireBaseAuth {
           MaterialPageRoute(builder: (context) => MyHomePage()),
           (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (error) {
-      DialogPlatformCtrl(
-        title: 'Error',
-        myContent: Text(error.message!),
+      showDialog(
         context: context,
-        yesButton: 'OK',
-        yesButtonFun: () {
-          Navigator.of(context).pop();
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text(error.message!),
+            actions: <Widget>[
+              TextButton(
+                  child: Text('OK'),
+                  onPressed: () => Navigator.of(context).pop()),
+            ],
+          );
         },
-      ).platformCtrlDialog();
+      );
     }
   }
 }

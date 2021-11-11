@@ -8,7 +8,8 @@ import 'package:persona_application/utils/my_shared_preferences.dart';
 import 'dashboard.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({Key? key, this.response = -1}) : super(key: key);
+  final int response;
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -26,7 +27,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Persona'),
+          title: Text(widget.response == 0
+              ? 'Success'
+              : widget.response == 1
+                  ? 'Error'
+                  : 'Persona'),
+          backgroundColor: widget.response == 1 ? Colors.red : Colors.green,
           actions: [
             IconButton(
               onPressed: () async {
