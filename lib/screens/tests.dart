@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persona_application/data/model/test_request_model.dart';
 import 'package:persona_application/data/services/my_firebase_store.dart';
-import 'package:persona_application/screens/home_page.dart';
 import 'package:survey_kit/survey_kit.dart';
 
+ValueNotifier<int> valueTest = ValueNotifier<int>(-1);
+
 class Tests extends StatelessWidget {
-  Tests({Key? key}) : super(key: key);
-  BuildContext? buildContext;
+  const Tests({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    buildContext = context;
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -66,13 +65,10 @@ class Tests extends StatelessWidget {
                     //lastHoliday
                     requestModel.lastHoliday =
                         result.results[8].results.first.result as DateTime;
+
                     bool response =
                         await MyFireBaseStore().addStore(requestModel);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (buildContext) =>
-                                MyHomePage(response: response ? 0 : 1)));
+                    valueTest.value = response ? 0 : 1;
                   },
 
                   task: task,

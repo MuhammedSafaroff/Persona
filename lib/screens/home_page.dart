@@ -8,8 +8,7 @@ import 'package:persona_application/utils/my_shared_preferences.dart';
 import 'dashboard.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, this.response = -1}) : super(key: key);
-  final int response;
+  const MyHomePage({Key? key}) : super(key: key);
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -19,20 +18,58 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static List<Widget> _widgetOptions = <Widget>[
     Dashboard(),
-    Tests(),
+    // Tests(),
     Settings(),
   ];
+
+  @override
+  void initState() {
+    valueTest.addListener(() {
+      if (valueTest.value == 0) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Success'),
+              content: Text('The operation was successful'),
+              actions: <Widget>[
+                TextButton(
+                    child: Text('OK'),
+                    onPressed: () => Navigator.of(context).pop()),
+              ],
+            );
+          },
+        );
+      } else if (valueTest.value == 1) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Unknown error has occurred'),
+              actions: <Widget>[
+                TextButton(
+                    child: Text(
+                      'OK',
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop()),
+              ],
+            );
+          },
+        );
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.response == 0
-              ? 'Success'
-              : widget.response == 1
-                  ? 'Error'
-                  : 'Persona'),
-          backgroundColor: widget.response == 1 ? Colors.red : Colors.green,
+          title: Text('Persona'),
           actions: [
             IconButton(
               onPressed: () async {
@@ -59,8 +96,6 @@ class _MyHomePageState extends State<MyHomePage> {
             items: const [
               BottomNavigationBarItem(
                   icon: Icon(Icons.dashboard_rounded), label: "Dashboard"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.quiz_sharp), label: "Tests"),
               BottomNavigationBarItem(
                   icon: Icon(Icons.settings), label: "Settings")
             ]));
